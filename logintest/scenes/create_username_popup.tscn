@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b1rwovakv4k6e"]
 
-[ext_resource type="Script" path="res://scripts/create_username_popup.gd" id="1_me7qs"]
+[ext_resource type="Script" uid="uid://c8fvenvrd6dav" path="res://scripts/create_username_popup.gd" id="1_me7qs"]
 
 [node name="CreateUsernamePopup" type="PopupPanel"]
 initial_position = 1

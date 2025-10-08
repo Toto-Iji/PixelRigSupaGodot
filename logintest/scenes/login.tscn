@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7le8h1fias52"]
+[gd_scene load_steps=3 format=3 uid="uid://b7le8h1fias52"]
 
-[ext_resource type="Script" path="res://scripts/login.gd" id="1_72syk"]
+[ext_resource type="Script" uid="uid://qfdulxoiuw34" path="res://scripts/login.gd" id="1_72syk"]
+[ext_resource type="PackedScene" uid="uid://blpuqc0ptgjxi" path="res://scenes/debug_terminal.tscn" id="2_uo5b7"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -46,6 +47,4 @@ offset_right = 551.0
 offset_bottom = -246.0
 text = "Signup"
 
-[connection signal="pressed" from="LoginButton" to="." method="_on_login_btn_pressed"]
-[connection signal="pressed" from="SignupRedirectButton" to="." method="_on_signup_redirect_pressed"]
-[connection signal="pressed" from="SignupRedirectButton" to="." method="_on_signup_redirect_button_pressed"]
+[node name="DebugTerminal" parent="." instance=ExtResource("2_uo5b7")]

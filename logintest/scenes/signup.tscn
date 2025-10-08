@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://0t7yq51cds22"]
 
-[ext_resource type="Script" path="res://scripts/signup.gd" id="1_7b5xu"]
+[ext_resource type="Script" uid="uid://u452srp22qj7" path="res://scripts/signup.gd" id="1_7b5xu"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -28,6 +28,7 @@ offset_top = -45.0
 offset_right = 147.0
 offset_bottom = 12.0
 placeholder_text = "Password"
+secret = true
 
 [node name="SignupButton" type="Button" parent="."]
 layout_mode = 0
@@ -44,6 +45,3 @@ offset_top = -298.0
 offset_right = 551.0
 offset_bottom = -246.0
 text = "Login"
-
-[connection signal="pressed" from="SignupButton" to="." method="_on_signup_button_pressed"]
-[connection signal="pressed" from="LoginRedirectButton" to="." method="_on_login_redirect_button_pressed"]
