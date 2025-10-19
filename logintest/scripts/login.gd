@@ -2,12 +2,23 @@ extends Control
 
 @onready var email_field = $emailTextEdit
 @onready var password_field = $passwordTextEdit
-@onready var login_button = $LoginButton
+@onready var action_button = $LoginButton
 @onready var signup_redirect = $SignupRedirectButton
 
+var is_signup_mode = false
+
 func _ready():
-	login_button.pressed.connect(_on_login_pressed)
+	action_button.pressed.connect(_on_action_pressed)
 	signup_redirect.pressed.connect(_on_signup_redirect_button_pressed)
+	email_field.connect("text_submitted", Callable(self, "_on_action_pressed"))
+	password_field.connect("text_submitted", Callable(self, "_on_action_pressed"))
+
+func _on_action_pressed(_text = ""):
+	if is_signup_mode:
+		_on_signup_pressed()
+	else:
+		_on_login_pressed()
+
 func _on_login_pressed():
 	var email = email_field.text.strip_edges()
 	var password = password_field.text.strip_edges()
@@ -17,38 +28,43 @@ func _on_login_pressed():
 		return
 
 	DebugLog.logv(["Login Status: Attempting login for", email])
-	login_button.disabled = true
+	action_button.disabled = true
 	Supabase.sign_in(email, password, Callable(self, "_on_login_response"))
 
-func _on_login_response(data, code):
-	if code == 200 and data.has("user"):
-		DebugLog.logv(["Login Status: Step 1/2 - Authentication successful."])
-		DebugLog.logv(["Login Status: Step 2/2 - Fetching user profile..."])
-		Supabase.get_profile(Supabase.get_current_user()["id"], Callable(self, "_on_profile_loaded"))
-	else:
-		login_button.disabled = false
-		DebugLog.logv(["Login Status: Login failed. Please check your credentials."])
-		DebugLog.logv(["Supabase Error: Code", code, ", Data:", data])
+func _on_signup_pressed():
+	var email = email_field.text.strip_edges()
+	var password = password_field.text.strip_edges()
 
-func _on_profile_loaded(data, code):
-	login_button.disabled = false
-	
-	DebugLog.logv(["=== PROFILE FETCH DEBUG ==="])
-	DebugLog.logv(["Response code:", code])
-	DebugLog.logv(["Data:", data])
-	DebugLog.logv(["Current user BEFORE scene change:", Supabase.get_current_user()])
-	DebugLog.logv(["User ID present?", Supabase.get_current_user().has("id")])
-	if Supabase.get_current_user().has("id"):
-		DebugLog.logv(["User ID value:", Supabase.get_current_user().get("id")])
-	DebugLog.logv(["=== END DEBUG ==="])
-	
-	if code == 200: 
-		DebugLog.logv(["Login Status: Step 2/2 - Profile fetch complete. Data:", data])
-		DebugLog.logv(["Login Status: Redirecting to main menu..."])
+	if email.is_empty() or password.is_empty():
+		DebugLog.logv(["Signup Status: Please fill in all fields."])
+		return
+
+	DebugLog.logv(["Signup Status: Creating account for", email])
+	action_button.disabled = true
+	Supabase.sign_up(email, password, Callable(self, "_on_signup_response"))
+
+func _on_login_response(data, code):
+	action_button.disabled = false
+	if code == 200 and data.has("user"):
+		DebugLog.logv(["Login Status: Successful. Redirecting..."])
 		get_tree().change_scene_to_file("res://scenes/main_menu_screen.tscn")
 	else:
-		DebugLog.logv(["Login Status: Critical error - Could not load user profile after login."])
-		DebugLog.logv(["Supabase Error: Code", code, ", Data:", data])
+		DebugLog.logv(["Login failed:", code, data])
+
+func _on_signup_response(data, code):
+	action_button.disabled = false
+	if code == 200:
+		DebugLog.logv(["Signup successful! You can now log in."])
+		_on_signup_redirect_button_pressed() # Go back to login mode
+	else:
+		DebugLog.logv(["Signup failed:", code, data])
 
 func _on_signup_redirect_button_pressed():
-	get_tree().change_scene_to_file("res://scenes/signup.tscn")
+	is_signup_mode = !is_signup_mode
+
+	if is_signup_mode:
+		action_button.text = "Sign Up"
+		signup_redirect.text = "Back to Login"
+	else:
+		action_button.text = "Login"
+		signup_redirect.text = "Go to Sign Up"
