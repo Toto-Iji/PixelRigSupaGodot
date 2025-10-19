@@ -5,16 +5,17 @@ extends Control
 @onready var left_sidebar = $LeftSideBar/MarginContainer/VBoxContainer
 
 # --- Preloads ---
-# Create this scene next (see step 4 below)
 var LevelButtonScene = preload("res://scenes/level_button.tscn")
+# Preload the Transition Scene
+var TransitionScene = preload("res://scenes/transition_scene.tscn") 
 
-# --- State Variables ---
+# (Other state variables and setup functions remain the same)
 var _current_selected_level: Dictionary = {}
 var _levels_data: Array = []
 
 func _ready():
-	# Set max height to show 4 levels
-	var button_height = 190  # Adjust based on your button size
+	# ... (rest of _ready() is unchanged) ...
+	var button_height = 190 
 	var size_multiplier = 4
 	left_sidebar.custom_minimum_size.y = button_height * size_multiplier
 	
@@ -22,7 +23,7 @@ func _ready():
 	play_button.disabled = true
 
 func setup_levels(levels_data: Array):
-	"""Dynamically generate level buttons from database"""
+	# (rest of setup_levels() is unchanged) ...
 	DebugLog.logv(["Setting up", levels_data.size(), "levels"])
 	
 	_levels_data = levels_data
@@ -54,8 +55,16 @@ func _on_play_button_pressed():
 		var scene_path = _current_selected_level.scene_path
 		
 		if not scene_path.is_empty():
-			DebugLog.logv(["Loading level:", scene_path])
-			get_tree().change_scene_to_file(scene_path)
+			DebugLog.logv(["Starting transition to level:", scene_path])
+			
+			# Instantiate the Transition Scene
+			var transition_instance = TransitionScene.instantiate()
+			# Add the transition scene to the root of the tree (it should be on a CanvasLayer)
+			get_tree().root.add_child(transition_instance)
+			
+			# Call the new start method on the transition scene
+			transition_instance.start_transition(scene_path)
+			
 		else:
 			DebugLog.logv(["Error: No scene path for level:", _current_selected_level.id])
 	else:

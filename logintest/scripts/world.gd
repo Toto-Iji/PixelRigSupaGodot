@@ -1,6 +1,13 @@
 # world.gd
 extends Node2D
 
+# --- NEW: Pause Menu Definitions ---
+const PAUSE_MENU_SCENE = preload("res://scenes/pause_menu.tscn") # 👈 CONFIRM THIS PATH
+const MAIN_MENU_PATH = "res://scenes/main_menu_screen.tscn"      # 👈 CONFIRM THIS PATH
+var is_paused_active = false
+var current_pause_menu = null
+# -----------------------------------
+
 var spawn_point: Vector2
 
 @onready var player = $Player
@@ -13,53 +20,143 @@ var spawn_point: Vector2
 @onready var level_complete_popup = $CanvasLayer/LevelCompletePopup if has_node("CanvasLayer/LevelCompletePopup") else null
 
 func _ready():
-	# Connect Player → HUD
+	# --- Existing Connections ---
 	player.health_changed.connect(hud.update_health)
 	
-	# Connect Death Popup signals (if popup exists)
 	if death_popup:
 		death_popup.respawn_requested.connect(respawn_player)
 		death_popup.main_menu_requested.connect(_on_main_menu_requested)
 	
-	# Connect Dialogue System (if it exists)
 	if dialogue_system:
 		dialogue_system.dialogue_finished.connect(_on_intro_dialogue_finished)
 	
-	# Connect Collection Popup (if it exists)
 	if collection_popup:
 		collection_popup.continue_pressed.connect(_on_collection_continue)
 	
-	# Connect Level Manager (if it exists)
 	if level_manager:
 		level_manager.component_collected.connect(_on_component_collected)
 	
-	# Connect Tutorial Popup (if it exists)
 	if tutorial_popup:
 		tutorial_popup.lets_go_pressed.connect(_on_tutorial_finished)
 	
-	# Connect Level Complete Popup (if it exists)
 	if level_complete_popup:
 		level_complete_popup.next_level_pressed.connect(_on_next_level)
 		level_complete_popup.main_menu_pressed.connect(_on_main_menu_requested)
 	
-	# Initialize HUD when game starts
+	# Initialize HUD and Spawn Point
 	hud.update_health(player.health)
 	
-	# Try to find PlayerStart marker
 	if has_node("PlayerStart"):
 		var player_start = $PlayerStart
 		spawn_point = player_start.global_position
 	else:
-		# fallback to player's current position
 		spawn_point = player.global_position
 	
-	# place player at spawn point
 	player.global_position = spawn_point
 	
-	# 🎬 Start intro cutscene
+	# Start intro cutscene
 	start_intro_cutscene()
 
+# -----------------------------------------------------------------------------
+# 🆕 NEW: Input Handling for Pause Menu
+# -----------------------------------------------------------------------------
+
+func _input(event):
+	# Check for the Escape key press (mapped to "ui_cancel" by default)
+	if event.is_action_pressed("ui_cancel"):
+		# Ensure we don't pause if any critical popups are open (e.g., Death/Complete)
+		if death_popup and death_popup.visible:
+			return
+		if level_complete_popup and level_complete_popup.visible:
+			return
+			
+		if is_paused_active:
+			# If the menu is already open, rely on the menu script to unpause/close itself
+			pass 
+		else:
+			# If the game is running, open the pause menu
+			open_pause_menu()
+		
+		get_viewport().set_input_as_handled()
+
+func open_pause_menu():
+	if is_paused_active:
+		return # Prevent opening multiple menus
+	
+	# 1. Pause the entire game tree
+	get_tree().paused = true
+	is_paused_active = true
+	
+	# 2. Instantiate and add the menu
+	current_pause_menu = PAUSE_MENU_SCENE.instantiate()
+	add_child(current_pause_menu)
+	
+	# 3. Connect signals from the menu to handle actions
+	current_pause_menu.continue_pressed.connect(_on_pause_menu_continue)
+	current_pause_menu.restart_pressed.connect(_on_pause_menu_restart)
+	current_pause_menu.main_menu_pressed.connect(_on_pause_menu_main_menu)
+
+# -----------------------------------------------------------------------------
+# 🆕 NEW: Pause Menu Signal Handlers
+# -----------------------------------------------------------------------------
+
+func _on_pause_menu_continue():
+	# 🟢 CONTINUE: The menu script already unpaused and queued itself for deletion.
+	is_paused_active = false
+	current_pause_menu = null
+	# The game continues
+
+func _on_pause_menu_restart():
+	get_tree().paused = false
+	is_paused_active = false
+
+	# Create and play transition
+	var transition = preload("res://scenes/transition_scene.tscn").instantiate()
+	add_child(transition)
+
+	# Restart the current scene with a smooth fade
+	var current_scene_path = get_tree().current_scene.scene_file_path
+	transition.start_transition(current_scene_path)
+
+	# Clean up the pause menu
+	if current_pause_menu:
+		current_pause_menu.queue_free()
+	current_pause_menu = null
+
+
+
+func _on_pause_menu_main_menu():
+	# 🏠 MAIN MENU:
+	# 1. Unpause the game BEFORE changing the scene
+	get_tree().paused = false
+	is_paused_active = false
+	
+	# 2. Change scene to the main menu
+	print("🏠 Returning to main menu:", MAIN_MENU_PATH)
+	get_tree().change_scene_to_file(MAIN_MENU_PATH)
+	
+	# 3. Clean up the menu
+	if current_pause_menu:
+		current_pause_menu.queue_free()
+	current_pause_menu = null
+
+# -----------------------------------------------------------------------------
+# 🛠️ MODIFIED: Existing Functions
+# -----------------------------------------------------------------------------
+
+func _on_main_menu_requested():
+	# This function is used by the Death and Level Complete popups.
+	# We ensure the game is unpaused before leaving the scene.
+	get_tree().paused = false
+	
+	print("🏠 Going to main menu (from popup):", MAIN_MENU_PATH)
+	get_tree().change_scene_to_file(MAIN_MENU_PATH)
+
+
+# --- (The rest of your existing functions remain the same) ---
+
 func respawn_player():
+# ... (contents unchanged) ...
 	# 🔹 Freeze player immediately
 	player.set_physics_process(false)
 	player.velocity = Vector2.ZERO
@@ -87,6 +184,7 @@ func respawn_player():
 	print("🔄 Respawned at:", spawn_point)
 
 func reset_all_hostiles():
+# ... (contents unchanged) ...
 	var hostiles = get_tree().get_nodes_in_group("Hostile")
 	
 	print("🔄 Starting reset of", hostiles.size(), "hostiles...")
@@ -102,9 +200,11 @@ func reset_all_hostiles():
 	print("✅ All hostiles reset complete!")
 
 func set_spawn_point(new_point: Vector2):
+# ... (contents unchanged) ...
 	spawn_point = new_point
 
 func show_death_popup():
+# ... (contents unchanged) ...
 	if death_popup:
 		death_popup.show_popup()
 	else:
@@ -113,14 +213,9 @@ func show_death_popup():
 		await get_tree().create_timer(1.0).timeout
 		respawn_player()
 
-func _on_main_menu_requested():
-	# TODO: Implement scene change to main menu
-	print("🏠 Going to main menu (not implemented yet)")
-	# When ready, use:
-	# get_tree().change_scene_to_file("res://MainMenu.tscn")
-
 # 🎬 Intro Cutscene System
 func start_intro_cutscene():
+# ... (contents unchanged) ...
 	if not dialogue_system:
 		print("⚠️ No DialogueSystem found, skipping intro")
 		return
@@ -136,19 +231,19 @@ func start_intro_cutscene():
 		{
 			"speaker": "System Alert",
 			"text": "Warning! The motherboard is under attack by malware!",
-			"camera_target": $hostile.global_position,  # Pan to hostile/problem area
+			"camera_target": $hostile.global_position,# Pan to hostile/problem area
 			"pan_duration": 1.5
 		},
 		{
-			"speaker": "System Alert", 
+			"speaker": "System Alert",
 			"text": "Critical system files are corrupted and need immediate repair!",
-			"camera_target": $Tool.global_position,  # Pan to another danger area
+			"camera_target": $Tool.global_position,# Pan to another danger area
 			"pan_duration": 1.0
 		},
 		{
 			"speaker": "AI Assistant",
 			"text": "You must navigate through the PC and eliminate all threats!",
-			"camera_target": player.global_position,  # Pan back to player
+			"camera_target": player.global_position,# Pan back to player
 			"pan_duration": 1.2
 		}
 	]
@@ -156,6 +251,7 @@ func start_intro_cutscene():
 	dialogue_system.start_dialogue(intro_dialogue)
 
 func _on_intro_dialogue_finished():
+# ... (contents unchanged) ...
 	# Re-enable player control after cutscene
 	player.set_physics_process(true)
 	
@@ -166,6 +262,7 @@ func _on_intro_dialogue_finished():
 
 # 🔹 NEW: Freeze/Unfreeze hostile functions
 func freeze_all_hostiles():
+# ... (contents unchanged) ...
 	var hostiles = get_tree().get_nodes_in_group("Hostile")
 	for hostile in hostiles:
 		if hostile:
@@ -174,6 +271,7 @@ func freeze_all_hostiles():
 				hostile.get_node("AnimatedSprite2D").stop()
 
 func unfreeze_all_hostiles():
+# ... (contents unchanged) ...
 	var hostiles = get_tree().get_nodes_in_group("Hostile")
 	for hostile in hostiles:
 		if hostile:
@@ -181,6 +279,7 @@ func unfreeze_all_hostiles():
 
 # Level Complete System
 func show_level_complete():
+# ... (contents unchanged) ...
 	if level_complete_popup:
 		var component = SolutionItem.get_current_item()
 		level_complete_popup.show_completion(component.get("name", "Component"))
@@ -188,25 +287,30 @@ func show_level_complete():
 		print("LEVEL COMPLETE!")
 
 func _on_next_level():
+# ... (contents unchanged) ...
 	# TODO: Load next level
 	print("Going to next level...")
 	# get_tree().change_scene_to_file("res://Level2.tscn")
 
 # 🎁 Component Collection System
 func show_collection_popup(component_id: String):
+# ... (contents unchanged) ...
 	if collection_popup:
-		player.set_physics_process(false)  # Freeze player during popup
+		player.set_physics_process(false)# Freeze player during popup
 		collection_popup.show_collection(component_id)
 	else:
 		print("⚠️ No collection popup found!")
 
 func _on_component_collected(component_id: String):
+# ... (contents unchanged) ...
 	print("🎉 Component collected:", component_id)
 
 func _on_collection_continue():
+# ... (contents unchanged) ...
 	player.set_physics_process(true) # Unfreeze player
 
 func _on_tutorial_finished():
+# ... (contents unchanged) ...
 	if tutorial_popup:
 		tutorial_popup.hide()
 	

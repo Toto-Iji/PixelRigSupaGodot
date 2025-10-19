@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://nwce60hwavrd"]
+[gd_scene load_steps=0 format=3 uid="uid://nwce60hwavrd"]
 
 [node name="ExercisePanel" type="Control"]
 layout_mode = 3
