@@ -2,28 +2,37 @@ extends Control
 
 # --- Node References ---
 @onready var welcome_label = $WelcomeLabel
-@onready var level_list_vbox = $MarginContainer/MainVBox/ContentHBox/LeftSideBar/MarginContainer/LevelListBox
-@onready var play_button = $MarginContainer/MainVBox/ContentHBox/CenterDisplay/MarginContainer/PC_Image/PlayButtonHBox/PlayButton
+@onready var content_hbox = $MarginContainer/MainVBox/ContentHBox
 
-# --- Scene Preload ---
+# Tab buttons
+@onready var computer_button = $MarginContainer/MainVBox/TopNavHBox/ComputerButton
+@onready var build_button = $MarginContainer/MainVBox/TopNavHBox/BuildButton
+@onready var exercise_button = $MarginContainer/MainVBox/TopNavHBox/ExerciseButton
+@onready var archive_button = $MarginContainer/MainVBox/TopNavHBox/ArchiveButton
+
+# --- Panel Preloads ---
+var ComputerPanelScene = preload("res://scenes/computer_panel.tscn")
+var BuildPanelScene = preload("res://scenes/build_panel.tscn")
+var ExercisePanelScene = preload("res://scenes/exercise_panel.tscn")
+var ArchivePanelScene = preload("res://scenes/archive_panel.tscn")
 var CreateUsernamePopupScene = preload("res://scenes/create_username_popup.tscn")
 
 # --- State Variables ---
 var _user: Dictionary
-var _current_selected_level = null
+var _current_panel = null
 
 func _ready():
 	_user = Supabase.get_current_user()
-
 	if _user.is_empty():
 		get_tree().change_scene_to_file("res://scenes/login.tscn")
 		return
-
-	play_button.pressed.connect(_on_play_button_pressed)
-	for button in level_list_vbox.get_children():
-		if button is Button and button.has_signal("selected"):
-			button.selected.connect(_on_level_selected)
-
+	
+	# Connect tab buttons
+	computer_button.pressed.connect(_on_tab_switched.bind("computer"))
+	build_button.pressed.connect(_on_tab_switched.bind("build"))
+	exercise_button.pressed.connect(_on_tab_switched.bind("exercise"))
+	archive_button.pressed.connect(_on_tab_switched.bind("archive"))
+	
 	if _user.has("username") and _user.username != null and not _user.username.is_empty():
 		initialize_game_ui()
 	else:
@@ -31,15 +40,68 @@ func _ready():
 
 func initialize_game_ui():
 	DebugLog.logv(["Main Menu: Initializing Game UI..."])
-	play_button.disabled = true
 	
 	var display_name = _user.get("username", _user.get("email", "Player"))
 	welcome_label.text = "Welcome, " + display_name + "!"
 	
-	if _user.has("id"):
-		Supabase.get_player_progress(str(_user["id"]), Callable(self, "_on_player_progress_loaded"))
+	# Change these function calls:
+	if GameData.should_refetch():
+		DebugLog.logv(["Level completed, refetching progress..."])
+		Supabase.get_player_levels(Callable(self, "_on_player_progress_loaded"))  # CHANGED
+	elif not GameData.has_cached_progress():
+		DebugLog.logv(["No cached data, fetching for first time..."])
+		Supabase.get_player_levels(Callable(self, "_on_player_progress_loaded"))  # CHANGED
 	else:
-		DebugLog.logv(["Error: No user ID found, cannot fetch player progress."])
+		DebugLog.logv(["Using cached progress data"])
+	
+	_on_tab_switched("computer")
+
+func _on_tab_switched(tab_name: String):
+	DebugLog.logv(["Switching to tab:", tab_name])
+	
+	# Clear current panel
+	if _current_panel:
+		_current_panel.queue_free()
+		_current_panel = null
+	
+	# Load new panel based on tab
+	match tab_name:
+		"computer":
+			_current_panel = ComputerPanelScene.instantiate()
+			content_hbox.add_child(_current_panel)
+			_setup_computer_panel()
+		"build":
+			_current_panel = BuildPanelScene.instantiate()
+			content_hbox.add_child(_current_panel)
+		"exercise":
+			_current_panel = ExercisePanelScene.instantiate()
+			content_hbox.add_child(_current_panel)
+		"archive":
+			_current_panel = ArchivePanelScene.instantiate()
+			content_hbox.add_child(_current_panel)
+
+func _setup_computer_panel():
+	# Use cached data if available
+	if GameData.has_cached_progress():
+		DebugLog.logv(["Using cached progress data"])
+		if _current_panel and _current_panel.has_method("setup_levels"):
+			_current_panel.setup_levels(GameData.get_cached_progress())
+	else:
+		DebugLog.logv(["Progress not loaded yet, waiting..."])
+
+func _on_player_progress_loaded(data, code):
+	if code != 200: 
+		DebugLog.logv(["Error: Could not load player progress."])
+		return
+	
+	DebugLog.logv(["Player progress loaded:", data])
+	
+	# Cache the data in singleton
+	GameData.cache_progress(data)
+	
+	# Setup levels if computer panel is visible
+	if _current_panel and _current_panel.has_method("setup_levels"):
+		_current_panel.setup_levels(data)
 
 func prompt_for_username():
 	DebugLog.logv(["Main Menu: New user detected. Instantiating username popup."])
@@ -60,45 +122,3 @@ func _on_username_saved(_data, code, new_username):
 		initialize_game_ui()
 	else:
 		DebugLog.logv(["Username Status: Failed to save username."])
-
-func _on_player_progress_loaded(data, code):
-	if code != 200: 
-		DebugLog.logv(["Error: Could not load player progress."])
-		return
-	
-	DebugLog.logv(["Data from Supabase:", data])
-
-	var unlocked_status = {}
-	for level_data in data:
-		unlocked_status[level_data.level_id] = level_data.is_unlocked
-
-	for button in level_list_vbox.get_children():
-		if button.has_method("unlock"):
-			DebugLog.logv(["Checking Button with ID:", button.level_id])
-			var is_unlocked = unlocked_status.get(button.level_id, false)
-			if is_unlocked:
-				button.unlock()
-			else:
-				button.lock()
-
-func _on_level_selected(button_instance):
-	DebugLog.logv(["Selected level:", button_instance.level_id])
-	_current_selected_level = button_instance
-	play_button.disabled = not _current_selected_level.is_unlocked
-
-func _on_play_button_pressed():
-	if _current_selected_level and _current_selected_level.is_unlocked:
-		var scene_path = ""
-		match _current_selected_level.level_id:
-			"part_1":
-				scene_path = "res://scenes/world.tscn"
-			"part_2":
-				scene_path = "res://levels/part_2_assembly.tscn"
-		
-		if not scene_path.is_empty():
-			DebugLog.logv(["Loading level:", scene_path])
-			get_tree().change_scene_to_file(scene_path)
-		else:
-			DebugLog.logv(["Error: No scene path defined for level:", _current_selected_level.level_id])
-	else:
-		DebugLog.logv(["Cannot play: No unlocked level selected."])

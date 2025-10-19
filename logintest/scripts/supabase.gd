@@ -146,20 +146,21 @@ func update_profile(profile_data: Dictionary, callback: Callable):
 		push_error("Supabase Error: No current user ID found.")
 
 # --- GAME PROGRESS ---
-func get_player_progress(user_id: String, callback: Callable):
-	# Validate it's a UUID, not a number
-	if user_id.is_empty() or user_id.is_valid_int():
-		push_error("Invalid user_id passed to get_player_progress: " + user_id)
-		if callback.is_valid():
-			callback.call([], 400)
-		return
-	
-	var path = "/rest/v1/player_progress?select=*&user_id=eq." + str(user_id)
+func get_player_levels(callback: Callable):
+	var path = "/rest/v1/player_levels?select=*"
 	var extra_headers = [
 		"Accept: application/json",
-		"Accept-Encoding: identity"
+		"Accept-Encoding: identity, *;q=0"
 	]
 	_do_request(path, HTTPClient.METHOD_GET, {}, callback, extra_headers)
+
+# Add function to unlock next level
+func unlock_next_level(current_level_id: String, callback: Callable):
+	var path = "/rest/v1/rpc/unlock_next_level"
+	var body = {
+		"current_level_id": current_level_id
+	}
+	_do_request(path, HTTPClient.METHOD_POST, body, callback)
 
 # --- HELPERS ---
 func get_current_user() -> Dictionary:

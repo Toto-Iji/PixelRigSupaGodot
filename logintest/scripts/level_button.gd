@@ -1,30 +1,32 @@
 extends Button
 
+signal selected
 
-signal selected(button_instance)
+@onready var level_name_label = $MarginContainer/HBoxContainer/VBoxContainer/LevelName
+@onready var level_theme_label = $MarginContainer/HBoxContainer/VBoxContainer/LevelTheme
 
+var level_data: Dictionary = {}
 
-@export var level_id: String = "part_1"
-@export var level_name: String = "Part 1"
-
-var is_unlocked: bool = false
-
-@onready var label = $Label
-@onready var lock_icon = $LockIcon
-
-func _ready():
-	label.text = level_name
-	self.pressed.connect(_on_pressed)
+func setup(data: Dictionary):
+	level_data = data
+	
+	level_name_label.text = data.display_name
+	level_theme_label.text = data.theme
+	
+	if data.is_unlocked:
+		unlock()
+	else:
+		lock()
+	
+	pressed.connect(_on_pressed)
 
 func lock():
-	is_unlocked = false
-	lock_icon.show()
-	label.hide()
+	disabled = true
+	modulate = Color(0.5, 0.5, 0.5, 1.0)  # Greyed out
 
 func unlock():
-	is_unlocked = true
-	lock_icon.hide()
-	label.show()
+	disabled = false
+	modulate = Color(1, 1, 1, 1)
 
 func _on_pressed():
-	selected.emit(self)
+	selected.emit()
