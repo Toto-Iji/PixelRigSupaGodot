@@ -145,7 +145,7 @@ offset_bottom = 20.072
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0.501961, 0, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 45
 script = ExtResource("6_k3n1d")
 
 [node name="Tool" parent="." instance=ExtResource("5_036b0")]
@@ -211,12 +211,10 @@ spawn_marker_path = NodePath("../Hostile1Spawn2")
 position = Vector2(435, 774)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource("15_hiqwa")]
 
 [node name="DeathPopup" parent="CanvasLayer" instance=ExtResource("16_2u3nc")]
-visible = false
 
 [node name="TutorialPopup" parent="CanvasLayer" instance=ExtResource("17_cbp6q")]
 
