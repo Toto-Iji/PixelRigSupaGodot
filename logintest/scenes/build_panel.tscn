@@ -1,5 +1,0 @@
-[gd_scene load_steps=0 format=3 uid="uid://ca0itgho4f478"]
-
-[node name="BuildPanel" type="Control"]
-layout_mode = 3
-anchors_preset = 0
