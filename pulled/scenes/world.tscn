@@ -133,12 +133,17 @@ scale = Vector2(0.3, 0.3)
 script = ExtResource("6_2o6r5")
 
 [node name="TerminalText" type="Label" parent="UI"]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -42.0
-offset_right = 222.0
-grow_vertical = 0
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.361
+anchor_right = 0.5
+anchor_bottom = 0.361
+offset_left = -112.0
+offset_top = -21.928
+offset_right = 110.0
+offset_bottom = 20.072
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0.501961, 0, 1)
 theme_override_font_sizes/font_size = 30
 script = ExtResource("6_k3n1d")
@@ -206,6 +211,7 @@ spawn_marker_path = NodePath("../Hostile1Spawn2")
 position = Vector2(435, 774)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource("15_hiqwa")]
 
