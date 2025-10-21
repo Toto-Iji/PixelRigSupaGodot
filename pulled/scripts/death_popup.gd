@@ -19,8 +19,20 @@ func hide_popup():
 
 func _on_respawn_button_pressed():
 	hide_popup()
-	respawn_requested.emit()
+
+	# Add transition effect (same as restart logic in world.gd)
+	var transition = preload("res://scenes/transition_scene.tscn").instantiate()
+	get_tree().root.add_child(transition)
+
+	# Restart the current level smoothly
+	var current_scene_path = get_tree().current_scene.scene_file_path
+	transition.start_transition(current_scene_path)
+
 
 func _on_main_menu_button_pressed():
 	hide_popup()
-	main_menu_requested.emit()
+
+	# Add transition to main menu
+	var transition = preload("res://scenes/transition_scene.tscn").instantiate()
+	get_tree().root.add_child(transition)
+	transition.start_transition("res://scenes/main_menu_screen.tscn")

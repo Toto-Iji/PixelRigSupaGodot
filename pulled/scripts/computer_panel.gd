@@ -54,8 +54,12 @@ func _on_play_button_pressed():
 		var scene_path = _current_selected_level.scene_path
 		
 		if not scene_path.is_empty():
-			DebugLog.logv(["Loading level:", scene_path])
-			get_tree().change_scene_to_file(scene_path)
+			DebugLog.logv(["Loading level with transition:", scene_path])
+			
+			# 🟢 Smooth fade transition
+			var transition = preload("res://scenes/transition_scene.tscn").instantiate()
+			get_tree().root.add_child(transition)
+			transition.start_transition(scene_path)
 		else:
 			DebugLog.logv(["Error: No scene path for level:", _current_selected_level.id])
 	else:

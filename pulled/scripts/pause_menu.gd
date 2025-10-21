@@ -35,9 +35,17 @@ func _on_restart_button_pressed():
 	# The world.gd script handles unpausing and scene changing after this signal.
 
 func _on_main_menu_button_pressed():
-	# 🏠 MAIN MENU: Signal the parent (world.gd) to handle the scene change logic
-	main_menu_pressed.emit()
-	# The world.gd script handles unpausing and scene changing after this signal.
+	# Unpause the game
+	get_tree().paused = false
+
+	# Add transition effect (same as death_popup)
+	var transition = preload("res://scenes/transition_scene.tscn").instantiate()
+	get_tree().root.add_child(transition)
+	transition.start_transition("res://scenes/main_menu_screen.tscn")
+
+	# Remove the pause menu right away
+	queue_free()
+
 
 # Optional: Allow the player to unpause by pressing Escape again while the menu is open
 func _unhandled_input(event):
