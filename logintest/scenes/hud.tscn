@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://c23usrwuof0ju"]
+
+[ext_resource type="Texture2D" uid="uid://c7r66g81wxs8k" path="res://assets/HUD/pixel_heart.png" id="1_37p78"]
+[ext_resource type="Script" uid="uid://cty2vqayuy55n" path="res://scripts/hud.gd" id="1_64ctp"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_64ctp")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(225, 75)
+layout_mode = 1
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 190.0
+offset_bottom = 90.0
+
+[node name="Heart1" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_37p78")
+expand_mode = 1
+
+[node name="Heart2" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_37p78")
+expand_mode = 1
+
+[node name="Heart3" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_37p78")
+expand_mode = 1

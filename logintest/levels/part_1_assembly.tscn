@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlopdxbc6dh3l"]
+
+[ext_resource type="Texture2D" uid="uid://d17if6sgf3hdx" path="res://icon.svg" id="1_eygnd"]
+
+[node name="Part1Assembly" type="Node2D"]
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(576, 296)
+texture = ExtResource("1_eygnd")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(577, 322)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 525.0
+offset_top = 367.0
+offset_right = 665.0
+offset_bottom = 458.0
+text = "This is level 1"

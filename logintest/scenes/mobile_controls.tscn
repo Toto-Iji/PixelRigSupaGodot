@@ -1,0 +1,108 @@
+[gd_scene load_steps=2 format=3 uid="uid://djc83i8fo57vt"]
+
+[ext_resource type="Script" uid="uid://yfjpl0j4fxpu" path="res://scripts/mobile_controls.gd" id="1_k8ypl"]
+
+[node name="MobileControls" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_k8ypl")
+
+[node name="MovementJoystick" type="Control" parent="."]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 3
+anchor_left = 0.128
+anchor_top = 0.806
+anchor_right = 0.128
+anchor_bottom = 0.806
+offset_left = -74.456
+offset_top = -75.288
+offset_right = 75.544
+offset_bottom = 74.712
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="JoystickBase" type="ColorRect" parent="MovementJoystick"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.2, 0.2)
+
+[node name="JoystickKnob" type="ColorRect" parent="MovementJoystick"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 15.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8, 0.8, 0.8, 0.8)
+
+[node name="ActionButtons" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="AttackButton" type="Button" parent="ActionButtons"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -8.525
+anchor_top = -1.0
+anchor_right = -8.525
+anchor_bottom = -1.0
+offset_left = -104.0
+offset_top = -57.0
+offset_right = 104.0
+offset_bottom = 57.0
+text = "Shoot"
+
+[node name="InteractButton" type="Button" parent="ActionButtons"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.625
+anchor_top = -0.962
+anchor_right = -2.625
+anchor_bottom = -0.962
+offset_left = -101.0
+offset_top = -54.52
+offset_right = 101.0
+offset_bottom = 54.48
+text = "Interaact"
+
+[node name="PauseButton" type="Button" parent="."]
+anchors_preset = -1
+anchor_left = 0.905
+anchor_top = 0.102
+anchor_right = 0.905
+anchor_bottom = 0.102
+offset_left = -73.5601
+offset_top = -39.096
+offset_right = 72.4398
+offset_bottom = 38.904
+grow_horizontal = 0
+text = "Menu"
+
+[connection signal="pressed" from="PauseButton" to="." method="_on_pause_button_pressed"]

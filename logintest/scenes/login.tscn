@@ -1,0 +1,91 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7le8h1fias52"]
+
+[ext_resource type="Script" uid="uid://qfdulxoiuw34" path="res://scripts/login.gd" id="1_72syk"]
+[ext_resource type="PackedScene" uid="uid://blpuqc0ptgjxi" path="res://scenes/debug_terminal.tscn" id="2_uo5b7"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_72syk")
+
+[node name="DebugTerminal" parent="." instance=ExtResource("2_uo5b7")]
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="emailTextEdit" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+placeholder_text = "Email"
+
+[node name="passwordTextEdit" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+placeholder_text = "Password"
+secret = true
+
+[node name="LoginStatus" type="Label" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 170
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 170
+
+[node name="LoginButton" type="Button" parent="CenterContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(95, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Login"
+
+[node name="SignupRedirectButton" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 364.0
+offset_top = -239.0
+offset_right = 459.0
+offset_bottom = -189.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 16
+text = "Signup"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 277.0
+offset_top = 89.0
+offset_right = -277.0
+offset_bottom = 205.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 50
+text = "Welcome to PixelRig!"
+horizontal_alignment = 1
+vertical_alignment = 1

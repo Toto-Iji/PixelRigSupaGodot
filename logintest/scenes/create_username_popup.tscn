@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1rwovakv4k6e"]
+
+[ext_resource type="Script" uid="uid://c8fvenvrd6dav" path="res://scripts/create_username_popup.gd" id="1_me7qs"]
+
+[node name="CreateUsernamePopup" type="PopupPanel"]
+initial_position = 1
+size = Vector2i(203, 101)
+visible = true
+script = ExtResource("1_me7qs")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 199.0
+offset_bottom = 97.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "What should we call you?"
+
+[node name="UsernameLineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmUsernameButton" type="Button" parent="MarginContainer/VBoxContainer/CenterContainer"]
+layout_mode = 2
+text = "Confirm"

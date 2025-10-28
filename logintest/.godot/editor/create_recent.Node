@@ -1,6 +1,15 @@
-Button
+HBoxContainer
+Label
+MarginContainer
 VBoxContainer
-Control
+CenterContainer
+Button
 ColorRect
+TouchScreenButton
+TextureRect
+Control
+CollisionShape2D
+Area2D
+Node2D
 CanvasLayer
 AnimationPlayer
