@@ -14,6 +14,6 @@ func _ready() -> void:
 func _on_shoot_timer_timeout() -> void:
 	if projectile_scene:
 		var projectile = projectile_scene.instantiate()
+		projectile.direction = fire_direction.normalized()  # Set BEFORE adding to tree
 		get_parent().add_child(projectile)
 		projectile.global_position = global_position
-		projectile.direction = fire_direction.normalized()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://b3d5v3f3xxmyr"]
+[gd_scene load_steps=26 format=3 uid="uid://b3d5v3f3xxmyr"]
 
 [ext_resource type="PackedScene" uid="uid://by7yctgrl7bo1" path="res://scenes/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://dx372e0bo6qrg" path="res://scripts/world.gd" id="1_fj7yv"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://djitq0uk1qq1g" path="res://scenes/dialogue_system.tscn" id="17_udxuc"]
 [ext_resource type="PackedScene" uid="uid://icgnrds7ntj4" path="res://scenes/level_complete_popup.tscn" id="18_26xuy"]
 [ext_resource type="PackedScene" uid="uid://bs5lrdqqed1n0" path="res://scenes/level1.tscn" id="19_cbp6q"]
+[ext_resource type="PackedScene" uid="uid://bt4xr2gfjh4oc" path="res://scenes/level_2.tscn" id="21_7iits"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
 size = Vector2(1280, 20)
@@ -155,53 +156,73 @@ scale = Vector2(0.3, 0.3)
 
 [node name="Quizmaster" parent="." instance=ExtResource("7_pkg7o")]
 z_index = 1
-position = Vector2(2747, -482)
+position = Vector2(4379, 428)
 
 [node name="TerminalUI" parent="." instance=ExtResource("8_gbfbk")]
 
-[node name="Shooter" parent="." instance=ExtResource("9_ioo17")]
-position = Vector2(745, -774)
-scale = Vector2(0.5, 0.5)
+[node name="Shooter1X" parent="." instance=ExtResource("9_ioo17")]
+z_index = 1
+position = Vector2(4753, 209)
+scale = Vector2(0.2, 0.2)
 projectile_scene = ExtResource("10_wse8f")
 fire_interval = 1.0
 
+[node name="Shooter2X" parent="." instance=ExtResource("9_ioo17")]
+z_index = 1
+position = Vector2(4757, 406)
+scale = Vector2(0.2, 0.2)
+projectile_scene = ExtResource("10_wse8f")
+fire_interval = 1.0
+
+[node name="Shooter1Y" parent="." instance=ExtResource("9_ioo17")]
+z_index = 1
+position = Vector2(5011, 635)
+rotation = -1.5708
+scale = Vector2(0.2, 0.2)
+projectile_scene = ExtResource("10_wse8f")
+fire_interval = 1.0
+fire_direction = Vector2(0, -1)
+
+[node name="Sprite2D" parent="Shooter1Y" index="0"]
+flip_v = true
+
 [node name="PlayerStart" type="Marker2D" parent="."]
-position = Vector2(2214, -473)
+position = Vector2(3283, -138)
 
 [node name="Checkpoint" parent="." instance=ExtResource("11_ic0uy")]
 position = Vector2(507, 250)
 
 [node name="Checkpoint2" parent="." instance=ExtResource("11_ic0uy")]
 z_index = 1
-position = Vector2(2065, 134)
+position = Vector2(3792, 412)
 scale = Vector2(1.00289, 0.98433)
 
 [node name="hostile" parent="." instance=ExtResource("14_70uel")]
 z_index = 1
-position = Vector2(2751, 213)
+position = Vector2(4322, -51)
 scale = Vector2(3, 3)
 spawn_marker_path = NodePath("../Hostile1Spawn")
 
 [node name="Hostile1Spawn" type="Marker2D" parent="."]
-position = Vector2(2751, 213)
+position = Vector2(4322, -51)
 
 [node name="hostile3" parent="." instance=ExtResource("14_70uel")]
 z_index = 1
-position = Vector2(2668, 113)
+position = Vector2(4465, -180)
 scale = Vector2(3, 3)
 spawn_marker_path = NodePath("../Hostile1Spawn3")
 
 [node name="Hostile1Spawn3" type="Marker2D" parent="."]
-position = Vector2(2668, 113)
+position = Vector2(4465, -180)
 
 [node name="hostile4" parent="." instance=ExtResource("14_70uel")]
 z_index = 1
-position = Vector2(2810, 99)
+position = Vector2(4241, -264)
 scale = Vector2(3, 3)
 spawn_marker_path = NodePath("../Hostile1Spawn4")
 
 [node name="Hostile1Spawn4" type="Marker2D" parent="."]
-position = Vector2(2810, 99)
+position = Vector2(4241, -264)
 
 [node name="hostile2" parent="." instance=ExtResource("14_70uel")]
 position = Vector2(435, 774)
@@ -224,3 +245,11 @@ position = Vector2(435, 774)
 
 [node name="DemoLevel2" parent="." instance=ExtResource("19_cbp6q")]
 position = Vector2(338, 17)
+
+[node name="level2" parent="." instance=ExtResource("21_7iits")]
+position = Vector2(2944, -408)
+
+[editable path="Shooter1X"]
+[editable path="Shooter2X"]
+[editable path="Shooter1Y"]
+[editable path="level2"]
