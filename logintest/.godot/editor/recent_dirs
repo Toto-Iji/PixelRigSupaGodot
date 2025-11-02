@@ -1,5 +1,6 @@
-res://
-res://assets
-res://scenes
+res://scripts/singletons
+res://scripts/main_menu
+res://export_template/web
 res://scripts
 D:/Github/PixelRigSupaGodot/logintest/build
+res://scenes

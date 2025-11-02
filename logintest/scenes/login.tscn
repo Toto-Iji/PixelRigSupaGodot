@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://b7le8h1fias52"]
+[gd_scene load_steps=2 format=3 uid="uid://b7le8h1fias52"]
 
 [ext_resource type="Script" uid="uid://qfdulxoiuw34" path="res://scripts/login.gd" id="1_72syk"]
-[ext_resource type="PackedScene" uid="uid://blpuqc0ptgjxi" path="res://scenes/debug_terminal.tscn" id="2_uo5b7"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -11,8 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_72syk")
-
-[node name="DebugTerminal" parent="." instance=ExtResource("2_uo5b7")]
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1

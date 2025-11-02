@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://hvvkl7lvsd4v"]
 
-[ext_resource type="Script" uid="uid://c23h2xrv1f1xe" path="res://scripts/terminal.gd" id="1_7d6gb"]
+[ext_resource type="Script" uid="uid://c23h2xrv1f1xe" path="res://scripts/game/terminal.gd" id="1_7d6gb"]
 [ext_resource type="Texture2D" uid="uid://ce7c6xpayqeho" path="res://assets/download-removebg-preview.png" id="2_b5qft"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0u45f"]

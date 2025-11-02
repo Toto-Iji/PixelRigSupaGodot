@@ -1,4 +1,4 @@
-# Obstacle.gd - Blockages that can be cleared with specific tools
+# obstacle.gd
 extends StaticBody2D
 
 @export var required_tool_id: String = "wrench"  # What tool clears this obstacle

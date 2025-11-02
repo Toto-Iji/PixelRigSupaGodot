@@ -10,19 +10,19 @@ config_version=5
 
 [application]
 
-config/name="loginTest"
+config/name="PixelRig"
 run/main_scene="res://scenes/login.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-DebugLog="*res://scripts/debug_log.gd"
-Supabase="*res://scripts/supabase.gd"
-SolutionItem="*res://scripts/SolutionItem.gd"
-GameData="*res://scripts/game_data.gd"
-MobileInputFix="*res://scripts/mobile_input_fix.gd"
-DeviceDetector="*res://scripts/device_detector.gd"
+Supabase="*res://scripts/singletons/supabase.gd"
+SolutionItem="*res://scripts/singletons/SolutionItem.gd"
+GameData="*res://scripts/singletons/game_data.gd"
+DeviceDetector="*res://scripts/singletons/device_detector.gd"
+QuizManager="*res://scripts/singletons/quiz_manager.gd"
+QuizCache="*res://scripts/singletons/quiz_cache.gd"
 
 [display]
 

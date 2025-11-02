@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://nwce60hwavrd"]
+
+[ext_resource type="Script" uid="uid://c5alcm0gf6e3n" path="res://scripts/main_menu/exercise_panel.gd" id="1_7njdv"]
+
+[node name="ExercisePanel" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_7njdv")
+
+[node name="LeftSideBar" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.18
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="LeftSideBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="QuizList" type="VBoxContainer" parent="LeftSideBar/MarginContainer"]
+layout_mode = 2
+
+[node name="CenterDisplay" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterDisplay"]
+layout_mode = 2
+
+[node name="ContentVBox" type="VBoxContainer" parent="CenterDisplay/MarginContainer"]
+layout_mode = 2
+
+[node name="QuizContent" type="Label" parent="CenterDisplay/MarginContainer/ContentVBox"]
+layout_mode = 2
+
+[node name="QuizScore" type="Label" parent="CenterDisplay/MarginContainer/ContentVBox"]
+layout_mode = 2
+
+[node name="AttemptInfo" type="Label" parent="CenterDisplay/MarginContainer/ContentVBox"]
+layout_mode = 2
+
+[node name="TakeQuizButton" type="Button" parent="CenterDisplay/MarginContainer/ContentVBox"]
+custom_minimum_size = Vector2(95, 50)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 10
+text = "Take Quiz"

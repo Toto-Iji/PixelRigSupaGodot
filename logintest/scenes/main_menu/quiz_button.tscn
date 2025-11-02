@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyob45rflgdyw"]
+
+[ext_resource type="Script" uid="uid://dhv4syfwkioa1" path="res://scripts/main_menu/quiz_button.gd" id="1_22frs"]
+
+[node name="QuizButton" type="Button"]
+script = ExtResource("1_22frs")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="QuizNameLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
