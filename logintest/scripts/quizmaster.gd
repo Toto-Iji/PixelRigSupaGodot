@@ -1,22 +1,33 @@
-# quizmaster.gd
 extends Area2D
 
-@export var level_id: String = "level_1"  # Configure per level
+const QUIZ_UI_SCENE = preload("res://scenes/quiz_ui.tscn")
+
+@export var level_id: String = "level_1"
 @export var reward_type: String = "component"  # "component" or "tool"
-@export var reward_id: String = "cpu"  # cpu, ram, wrench, extinguisher, etc.
+@export var reward_id: String = "cpu"
 
 var quiz_completed: bool = false
+var quiz_ui_instance = null
 
 func interact():
 	if quiz_completed:
 		print("You already completed this quiz!")
 		return
 	
-	var quiz_ui = get_tree().root.get_node("World/QuizUI")
-	var player = get_tree().root.get_node("World/Player")
+	# Instantiate quiz UI dynamically
+	quiz_ui_instance = QUIZ_UI_SCENE.instantiate()
+	get_tree().root.add_child(quiz_ui_instance)
 	
-	# Quiz questions - customize per level
-	var q_list = [
+	# Define questions (can move to external JSON/resource later)
+	var questions = _get_questions_for_level()
+	
+	# Connect completion signal and show quiz
+	quiz_ui_instance.quiz_completed.connect(_on_quiz_completed)
+	quiz_ui_instance.show_quiz(questions)
+
+func _get_questions_for_level() -> Array:
+	# You can load from JSON or use a match statement per level
+	return [
 		{
 			"text": "What does CPU stand for?",
 			"answers": ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Core Processing Usage"],
@@ -26,62 +37,38 @@ func interact():
 			"text": "What is the CPU's primary function?",
 			"answers": ["Store data", "Process instructions", "Display graphics", "Connect to internet"],
 			"correct": 1
-		},
-		{
-			"text": "Which component is known as the 'brain' of the computer?",
-			"answers": ["RAM", "Hard Drive", "CPU", "Motherboard"],
-			"correct": 2
 		}
 	]
-	
-	# Show quiz and connect to completion signal
-	quiz_ui.quiz_completed.connect(_on_quiz_completed)
-	quiz_ui.show_quiz(player, q_list)
 
 func _on_quiz_completed(score: int, total: int):
 	quiz_completed = true
-	print("Quiz completed! Score:", score, "/", total)
+	print("Quiz score:", score, "/", total)
 	
-	# Give reward based on type
+	# Give reward
 	if reward_type == "component":
 		_give_component()
 	elif reward_type == "tool":
 		_give_tool()
+	
+	# Clean up quiz UI
+	if quiz_ui_instance:
+		quiz_ui_instance.queue_free()
+		quiz_ui_instance = null
 
 func _give_component():
-	var component_data = {
+	SolutionItem.receive_item({
 		"type": SolutionItem.ItemType.COMPONENT,
 		"id": reward_id,
-		"name": _get_component_name(reward_id),
-		"description": "A critical PC component. Deliver it to the terminal.",
+		"name": SolutionItem.get_component_name(reward_id),
+		"description": "A critical PC component.",
 		"icon": "res://icons/" + reward_id + ".png"
-	}
-	SolutionItem.receive_item(component_data)
+	})
 
 func _give_tool():
-	var tool_data = {
+	SolutionItem.receive_item({
 		"type": SolutionItem.ItemType.TOOL,
 		"id": reward_id,
-		"name": _get_tool_name(reward_id),
+		"name": SolutionItem.get_tool_name(reward_id),
 		"description": "Use this tool to clear obstacles.",
 		"icon": "res://icons/" + reward_id + ".png"
-	}
-	SolutionItem.receive_item(tool_data)
-
-func _get_component_name(id: String) -> String:
-	match id:
-		"cpu": return "CPU"
-		"ram": return "RAM"
-		"gpu": return "GPU"
-		"motherboard": return "Motherboard"
-		"psu": return "Power Supply"
-		"storage": return "Storage Drive"
-		_: return "Unknown Component"
-
-func _get_tool_name(id: String) -> String:
-	match id:
-		"wrench": return "Wrench"
-		"extinguisher": return "Fire Extinguisher"
-		"vacuum": return "Vacuum Cleaner"
-		"multimeter": return "Multimeter"
-		_: return "Unknown Tool"
+	})

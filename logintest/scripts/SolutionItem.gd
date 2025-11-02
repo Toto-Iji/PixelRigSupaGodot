@@ -57,3 +57,21 @@ func clear_item() -> void:
 		"description": "",
 		"icon": ""
 	}
+
+static func get_component_name(id: String) -> String:
+	match id:
+		"cpu": return "CPU"
+		"ram": return "RAM"
+		"gpu": return "GPU"
+		"motherboard": return "Motherboard"
+		"psu": return "Power Supply"
+		"storage": return "Storage Drive"
+		_: return "Unknown Component"
+
+static func get_tool_name(id: String) -> String:
+	match id:
+		"wrench": return "Wrench"
+		"extinguisher": return "Fire Extinguisher"
+		"vacuum": return "Vacuum Cleaner"
+		"multimeter": return "Multimeter"
+		_: return "Unknown Tool"

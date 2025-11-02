@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://b3d5v3f3xxmyr"]
+[gd_scene load_steps=25 format=3 uid="uid://b3d5v3f3xxmyr"]
 
 [ext_resource type="PackedScene" uid="uid://by7yctgrl7bo1" path="res://scenes/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://dx372e0bo6qrg" path="res://scripts/world.gd" id="1_fj7yv"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://hvvkl7lvsd4v" path="res://scenes/terminal.tscn" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://pysmgpld30kt" path="res://scenes/tool.tscn" id="5_036b0"]
 [ext_resource type="Script" uid="uid://cy1dhqly8k3hx" path="res://scripts/UIManager.gd" id="6_2o6r5"]
-[ext_resource type="Script" uid="uid://bd156lcdidymc" path="res://scripts/quiz_ui.gd" id="6_dwbse"]
 [ext_resource type="Script" uid="uid://b0to2s73tb2r0" path="res://scripts/terminal_text.gd" id="6_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://dx5vuu1noee2i" path="res://scenes/quizmaster.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://oc4d7qawurv6" path="res://scenes/terminal_ui.tscn" id="8_gbfbk"]
@@ -46,57 +45,6 @@ texture = ExtResource("3_tlwt5")
 modulate = Color(0.822726, 0.792002, 0.699268, 1)
 z_index = 1
 position = Vector2(153, -109)
-
-[node name="QuizUI" type="CanvasLayer" parent="."]
-script = ExtResource("6_dwbse")
-
-[node name="Panel" type="Panel" parent="QuizUI"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="QuizUI/Panel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -102.0
-offset_top = -100.0
-offset_right = 102.0
-offset_bottom = -77.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "What does RAM stand for?"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="QuizUI/Panel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = 16.0
-offset_right = 20.0
-offset_bottom = 56.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="True" type="Button" parent="QuizUI/Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="False" type="Button" parent="QuizUI/Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="FeedbackLabel" type="Label" parent="QuizUI/Panel"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
 
 [node name="Room" type="Node2D" parent="."]
 
