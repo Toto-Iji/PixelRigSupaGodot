@@ -241,7 +241,7 @@ const engine = new Engine(GODOT_CONFIG);
      </script>
         
         <script>
-        // Global fullscreen function
+        // Global fullscreen function that Godot can call
         window.requestGameFullscreen = function() {
             const elem = document.documentElement;
             if (elem.requestFullscreen) {
@@ -254,23 +254,6 @@ const engine = new Engine(GODOT_CONFIG);
                 elem.msRequestFullscreen();
             }
         };
-        
-        // Auto-fullscreen on rotation to landscape (mobile only)
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            window.addEventListener('orientationchange', function() {
-                // Wait a moment for orientation to fully change
-                setTimeout(function() {
-                    // If landscape and not in fullscreen, request it
-                    if (window.orientation === 90 || window.orientation === -90) {
-                        if (!document.fullscreenElement && 
-                            !document.webkitFullscreenElement && 
-                            !document.mozFullScreenElement) {
-                            window.requestGameFullscreen();
-                        }
-                    }
-                }, 100);
-            });
-        }
         </script>
         </script>
     </body>
