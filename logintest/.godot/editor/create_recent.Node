@@ -1,12 +1,12 @@
+MarginContainer
+CenterContainer
+PanelContainer
+VBoxContainer
+ScrollContainer
 Label
 PhysicalBone2D
-VBoxContainer
-MarginContainer
 Button
-PanelContainer
-ScrollContainer
 HBoxContainer
-CenterContainer
 ColorRect
 TouchScreenButton
 TextureRect

@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://ciwnrswa8dkxy"]
+
+[ext_resource type="Script" uid="uid://p1wxldphb5k7" path="res://scripts/mini_game.gd" id="1_0gcsj"]
+[ext_resource type="Texture2D" uid="uid://bv5kxhwp6uoy6" path="res://assets/background.png" id="1_gn4em"]
+[ext_resource type="PackedScene" uid="uid://j6a3dnd6ggyg" path="res://scenes/socket.tscn" id="3_0gcsj"]
+[ext_resource type="PackedScene" uid="uid://m8gkswgxmiqq" path="res://scenes/cpu.tscn" id="3_3kuml"]
+[ext_resource type="PackedScene" uid="uid://b8tn40kb03tkq" path="res://scenes/lever.tscn" id="5_3kuml"]
+
+[node name="MiniGame" type="Node2D"]
+script = ExtResource("1_0gcsj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(587, 308)
+texture = ExtResource("1_gn4em")
+
+[node name="StatusLabel" type="Label" parent="."]
+offset_left = 44.0
+offset_top = 538.0
+offset_right = 309.0
+offset_bottom = 613.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Socket" parent="." instance=ExtResource("3_0gcsj")]
+position = Vector2(556, 268)
+
+[node name="CPU" parent="." instance=ExtResource("3_3kuml")]
+position = Vector2(948, 559)
+
+[node name="Lever" parent="." instance=ExtResource("5_3kuml")]
+position = Vector2(455, 307)

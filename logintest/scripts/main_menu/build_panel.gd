@@ -1,105 +1,65 @@
 extends HBoxContainer
 
+# Map each component to its minigame scene path
+var minigame_paths = {
+	"CPU": "res://mini-game/MiniGames/scenes/mini_game.tscn",
+	"RAM": "res://mini-game/MiniGames/scenes/mini_game_ram.tscn",
+	"GPU": "res://mini-game/MiniGames/scenes/mini_game_gpu.tscn",
+	"Motherboard": "res://mini-game/MiniGames/scenes/mini_game_motherboard.tscn",
+	"PSU": "res://mini-game/MiniGames/scenes/mini_game_psu.tscn",
+	"Storage": "res://mini-game/MiniGames/scenes/mini_game_storage.tscn"
+}
+
+# Node references
 @onready var component_list = $LeftSideBar/ScrollContainer/ComponentList
 @onready var progress_label = $CenterDisplay/ProgressInfo/ProgressLabel
 @onready var instruction_label = $CenterDisplay/ProgressInfo/InstructionLabel
 
-var _components_data: Array = []
+var completed_components = []
 
 func _ready():
-	instruction_label.text = "Loading components..."
-	_load_components()
-
-func _load_components():
-	Supabase.get_player_components(Callable(self, "_on_components_loaded"))
-
-func _on_components_loaded(data, code):
-	if code != 200:
-		instruction_label.text = "❌ Failed to load components."
-		push_error("ComponentScreen: Load failed - Code: %d" % code)
-		return
-	
-	_components_data = data
-	
-	if _components_data.is_empty():
-		instruction_label.text = "No components available yet."
-		progress_label.text = "Progress: 0/0 Components"
-		return
-	
+	print("🔧 BuildPanel ready!")
+	if progress_label:
+		progress_label.text = "Progress: 0/6 components installed"
+	if instruction_label:
+		instruction_label.text = "Select a component from the list to begin"
 	_setup_component_list()
-	_update_progress()
-	instruction_label.text = "Press SPACE to collect next component (for testing)"
 
 func _setup_component_list():
-	# Clear existing buttons
+	if not component_list:
+		return
 	for child in component_list.get_children():
 		child.queue_free()
-	
-	# Create buttons for each component
-	for component in _components_data:
-		var button = _create_component_button(component)
-		component_list.add_child(button)
+	var components = ["CPU", "RAM", "GPU", "Motherboard", "PSU", "Storage"]
+	for comp in components:
+		var btn = Button.new()
+		btn.text = comp
+		btn.custom_minimum_size = Vector2(150, 40)
+		if comp in completed_components:
+			btn.text = "✅ " + comp
+			btn.disabled = true
+		btn.pressed.connect(_on_component_selected.bind(comp))
+		component_list.add_child(btn)
 
-func _create_component_button(component: Dictionary) -> Button:
-	var button = Button.new()
-	button.custom_minimum_size = Vector2(0, 60)
-	button.text = "%s\n%s" % [component.name, component.category]
-	
-	# Style based on status
-	if component.installed:
-		button.modulate = Color(0.7, 1.0, 0.7)  # Green
-		button.text += " ✅ Installed"
-		button.disabled = true
-	elif component.collected:
-		button.modulate = Color(1, 1, 0.7)  # Yellow
-		button.text += " 🎮 Ready to Install"
-		button.pressed.connect(_on_install_clicked.bind(component))
+func _on_component_selected(component_name: String):
+	print("🎯 Selected component:", component_name)
+	if instruction_label:
+		instruction_label.text = "Loading " + component_name + " installation..."
+
+	if minigame_paths.has(component_name):
+		_start_transition_to_minigame(minigame_paths[component_name])
 	else:
-		button.modulate = Color(0.5, 0.5, 0.5)  # Gray
-		button.text += " 🔒 Locked"
-		button.disabled = true
-	
-	return button
+		if instruction_label:
+			instruction_label.text = component_name + " minigame coming soon!"
 
-func _on_install_clicked(component: Dictionary):
-	instruction_label.text = "Installing %s..." % component.name
-	
-	Supabase.install_component_debug(component.id, func(data, code):
-		if code == 200:
-			instruction_label.text = "✅ %s installed!" % component.name
-			_load_components()  # Refresh
-		else:
-			instruction_label.text = "❌ Installation failed."
-			push_error("ComponentScreen: Installation failed - Code: %d" % code)
-	)
+func _start_transition_to_minigame(scene_path):
+	# Optional: use a transition effect scene (recommended)
+	if ResourceLoader.exists("res://scenes/transition_scene.tscn"):
+		var transition = preload("res://scenes/transition_scene.tscn").instantiate()
+		get_tree().root.add_child(transition)
+		transition.start_transition(scene_path)
+	else:
+		# Instant change if you have no transition scene
+		get_tree().change_scene_to_file(scene_path)
 
-func _update_progress():
-	var total = _components_data.size()
-	var installed = 0
-	
-	for component in _components_data:
-		if component.installed:
-			installed += 1
-	
-	progress_label.text = "Progress: %d/%d Components Installed" % [installed, total]
-
-# DEBUG: Press SPACE to collect next locked component
-func _input(event):
-	if event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
-		for component in _components_data:
-			if not component.collected:
-				_collect_component(component.id)
-				return
-		instruction_label.text = "All components already collected!"
-
-func _collect_component(component_id: String):
-	instruction_label.text = "Collecting component..."
-	
-	Supabase.collect_component_debug(component_id, func(data, code):
-		if code == 200:
-			instruction_label.text = "🎁 Component collected!"
-			_load_components()  # Refresh
-		else:
-			instruction_label.text = "❌ Collection failed."
-			push_error("ComponentScreen: Collection failed - Code: %d" % code)
-	)
+# You can add progress/completion saving logic as needed!

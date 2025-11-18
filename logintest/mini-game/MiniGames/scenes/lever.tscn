@@ -1,0 +1,65 @@
+[gd_scene load_steps=9 format=3 uid="uid://bt4k6i1atjs6m"]
+
+[ext_resource type="Script" uid="uid://j3iixqnjjyf0" path="res://scripts/lever.gd" id="1_4kwec"]
+[ext_resource type="Texture2D" uid="uid://cjov71eush8os" path="res://assets/lever_locked-Sheet.png" id="2_ncfea"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qxmkn"]
+atlas = ExtResource("2_ncfea")
+region = Rect2(0, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8di2w"]
+atlas = ExtResource("2_ncfea")
+region = Rect2(1024, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ncfea"]
+atlas = ExtResource("2_ncfea")
+region = Rect2(1024, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dkrws"]
+atlas = ExtResource("2_ncfea")
+region = Rect2(0, 0, 1024, 1024)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dkrws"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qxmkn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8di2w")
+}],
+"loop": false,
+"name": &"lock",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ncfea")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dkrws")
+}],
+"loop": true,
+"name": &"unlock",
+"speed": 0.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ncfea"]
+size = Vector2(173.333, 68.7186)
+
+[node name="Lever" type="Area2D"]
+rotation = -6.02139
+script = ExtResource("1_4kwec")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-4.00003, 7.00003)
+rotation = 0.403171
+scale = Vector2(0.426758, 0.426758)
+sprite_frames = SubResource("SpriteFrames_dkrws")
+animation = &"lock"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8.97073, 14.1607)
+rotation = 0.261799
+scale = Vector2(0.999999, 0.999999)
+shape = SubResource("RectangleShape2D_ncfea")

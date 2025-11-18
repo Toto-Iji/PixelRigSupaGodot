@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://b3d5v3f3xxmyr"]
+[gd_scene load_steps=27 format=3 uid="uid://b3d5v3f3xxmyr"]
 
 [ext_resource type="Script" uid="uid://dx372e0bo6qrg" path="res://scripts/game/world.gd" id="1_ry518"]
 [ext_resource type="Texture2D" uid="uid://b01lc2475vki5" path="res://assets/Solid_white.png" id="2_g3wwy"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://djitq0uk1qq1g" path="res://scenes/game/dialogue_system.tscn" id="19_gy7ni"]
 [ext_resource type="PackedScene" uid="uid://bs5lrdqqed1n0" path="res://scenes/game/level1.tscn" id="20_01lr2"]
 [ext_resource type="PackedScene" uid="uid://bt4xr2gfjh4oc" path="res://scenes/game/level_2.tscn" id="21_g0bee"]
+[ext_resource type="PackedScene" uid="uid://l73hgvkjc1y7" path="res://scenes/spike_ball.tscn" id="22_g3wwy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
 size = Vector2(1280, 20)
@@ -151,7 +152,7 @@ script = ExtResource("7_xjrwe")
 
 [node name="Tool" parent="." instance=ExtResource("8_3y1yf")]
 z_index = 1
-position = Vector2(4379, 1024)
+position = Vector2(4247, 1163)
 scale = Vector2(0.3, 0.3)
 
 [node name="Quizmaster" parent="." instance=ExtResource("9_cqqua")]
@@ -248,6 +249,18 @@ position = Vector2(338, 17)
 
 [node name="level2" parent="." instance=ExtResource("21_g0bee")]
 position = Vector2(2944, -408)
+
+[node name="SpikeBall" parent="." instance=ExtResource("22_g3wwy")]
+position = Vector2(4349, 1062)
+
+[node name="SpikeBall2" parent="." instance=ExtResource("22_g3wwy")]
+position = Vector2(4406, 1149)
+
+[node name="SpikeBall3" parent="." instance=ExtResource("22_g3wwy")]
+position = Vector2(4217, 908)
+
+[node name="SpikeBall4" parent="." instance=ExtResource("22_g3wwy")]
+position = Vector2(4524, 1068)
 
 [editable path="Shooter1X"]
 [editable path="Shooter2X"]

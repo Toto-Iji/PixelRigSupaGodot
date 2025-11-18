@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4sxkv5ij2sya"]
+
+[ext_resource type="Texture2D" uid="uid://cgyicniandm6v" path="res://assets/sockett.png" id="1_rlwot"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rlwot"]
+size = Vector2(334, 229.5)
+
+[node name="Socket" type="Area2D" groups=["socket"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1, 26)
+scale = Vector2(0.409668, 0.409668)
+texture = ExtResource("1_rlwot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 17)
+shape = SubResource("RectangleShape2D_rlwot")
+one_way_collision_margin = 0.0

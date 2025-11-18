@@ -5,6 +5,7 @@ extends Control
 @onready var play_button = $CenterDisplay/MarginContainer/PC_Image/PlayButtonHBox/PlayButton
 @onready var left_sidebar = $LeftSideBar/MarginContainer/VBoxContainer
 
+
 # --- Preloads ---
 var LevelButtonScene = preload("res://scenes/main_menu/level_button.tscn")
 
@@ -21,6 +22,8 @@ func _ready():
 	
 	play_button.pressed.connect(_on_play_button_pressed)
 	play_button.disabled = true
+	play_button.visible = false
+
 
 func setup_levels(levels_data: Array):
 	_levels_data = levels_data
@@ -50,12 +53,16 @@ func _on_level_selected(level_data: Dictionary, button):
 	
 	_current_selected_level = level_data
 	play_button.disabled = false
+	play_button.visible = true 
+
 
 func _on_level_deselected(button):
 	button.set_selected(false)
 	_current_selected_button = null
 	_current_selected_level = {}
 	play_button.disabled = true
+	play_button.visible = false
+
 
 func _on_play_button_pressed():
 	if _current_selected_level.is_empty():
