@@ -212,9 +212,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(38.8571, 52.5714)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 scale = Vector2(0.25, 0.25)
 script = ExtResource("1_4flbx")
+interact_distance = 120.0
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1

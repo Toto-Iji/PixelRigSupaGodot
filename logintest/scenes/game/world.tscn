@@ -1,9 +1,8 @@
-[gd_scene load_steps=27 format=3 uid="uid://b3d5v3f3xxmyr"]
+[gd_scene load_steps=26 format=3 uid="uid://b3d5v3f3xxmyr"]
 
 [ext_resource type="Script" uid="uid://dx372e0bo6qrg" path="res://scripts/game/world.gd" id="1_ry518"]
 [ext_resource type="PackedScene" uid="uid://by7yctgrl7bo1" path="res://scenes/game/player.tscn" id="3_ssxqg"]
 [ext_resource type="Script" uid="uid://bd156lcdidymc" path="res://scripts/game/quiz_ui.gd" id="4_8tx05"]
-[ext_resource type="Script" uid="uid://cuuil68kma8k4" path="res://scenes/game/minimap.gd" id="4_g3wwy"]
 [ext_resource type="PackedScene" uid="uid://hvvkl7lvsd4v" path="res://scenes/terminal.tscn" id="5_kkypk"]
 [ext_resource type="Script" uid="uid://cy1dhqly8k3hx" path="res://scripts/UIManager.gd" id="6_aa8ij"]
 [ext_resource type="Script" uid="uid://b0to2s73tb2r0" path="res://scripts/game/terminal_text.gd" id="7_xjrwe"]
@@ -42,29 +41,6 @@ script = ExtResource("1_ry518")
 modulate = Color(0.822726, 0.792002, 0.699268, 1)
 z_index = 1
 position = Vector2(153, -109)
-
-[node name="minimapUI" type="CanvasLayer" parent="."]
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="minimapUI"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -512.0
-offset_right = -392.0
-offset_bottom = 120.0
-grow_horizontal = 0
-
-[node name="SubViewport" type="SubViewport" parent="minimapUI/SubViewportContainer"]
-handle_input_locally = false
-size = Vector2i(120, 120)
-render_target_update_mode = 4
-script = ExtResource("4_g3wwy")
-
-[node name="Sprite2D" type="Sprite2D" parent="minimapUI/SubViewportContainer/SubViewport"]
-texture = ExtResource("22_ssxqg")
-
-[node name="Camera2D" type="Camera2D" parent="minimapUI/SubViewportContainer/SubViewport"]
-zoom = Vector2(0.1, 0.1)
 
 [node name="BG" type="Sprite2D" parent="."]
 texture = ExtResource("22_ssxqg")

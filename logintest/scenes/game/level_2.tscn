@@ -1,6 +1,6 @@
-[gd_scene load_steps=27 format=3 uid="uid://bt4xr2gfjh4oc"]
+[gd_scene load_steps=28 format=3 uid="uid://bt4xr2gfjh4oc"]
 
-[ext_resource type="Script" uid="uid://gtwj7th27heg" path="res://scenes/game/level_2.gd" id="1_18c5o"]
+[ext_resource type="Script" path="res://scenes/game/level_2.gd" id="1_18c5o"]
 [ext_resource type="Texture2D" uid="uid://d3mgwuxbahedf" path="res://assets/micky-orchard-gm2.jpg" id="1_doay6"]
 [ext_resource type="Texture2D" uid="uid://hl5m3wkdkekd" path="res://assets/factory_tileset.png" id="1_pbc48"]
 [ext_resource type="Texture2D" uid="uid://dtmc3eeyv4s4o" path="res://assets/lab_tileset_LITE.png" id="2_eqxsl"]
@@ -8,11 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://qdutmupsk3y2" path="res://assets/tilesStuff.png" id="5_qsm5n"]
 [ext_resource type="Texture2D" uid="uid://bk121plfl4x6e" path="res://assets/tilesWalls.png" id="6_0verc"]
 [ext_resource type="PackedScene" uid="uid://bc08oiii3s150" path="res://sliding_door.tscn" id="7_uin86"]
-[ext_resource type="Shader" uid="uid://buptetam44jjb" path="res://scenes/game/level_2.gdshader" id="9_0verc"]
+[ext_resource type="Shader" path="res://scenes/game/level_2.gdshader" id="9_0verc"]
 [ext_resource type="Texture2D" uid="uid://bxl8vqsqpcl53" path="res://assets/table-horizontal-128x128.png" id="10_18c5o"]
-[ext_resource type="Shader" uid="uid://cp5gdjqogwlqd" path="res://scenes/game/dimmer_level_2.gdshader" id="10_wh2ag"]
-[ext_resource type="Script" uid="uid://c3skd0hfop30r" path="res://scenes/game/room_a.gd" id="11_rywa0"]
-[ext_resource type="Script" uid="uid://ckuycdfkr1nkc" path="res://scenes/game/room_b.gd" id="11_wh2ag"]
+[ext_resource type="Shader" path="res://scenes/game/dimmer_level_2.gdshader" id="10_wh2ag"]
+[ext_resource type="Script" path="res://scenes/game/room_a.gd" id="11_rywa0"]
+[ext_resource type="Script" path="res://scenes/game/room_b.gd" id="11_wh2ag"]
+[ext_resource type="PackedScene" uid="uid://bylm5ooavv1" path="res://scenes/computer_npc.tscn" id="14_18c5o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x1lkl"]
 texture = ExtResource("1_doay6")
@@ -4800,5 +4801,9 @@ offset_top = 165.0
 offset_right = 1926.0
 offset_bottom = 576.0
 color = Color(0, 0, 0, 1)
+
+[node name="ComputerNPC" parent="." node_paths=PackedStringArray("linked_door") instance=ExtResource("14_18c5o")]
+position = Vector2(609, 488)
+linked_door = NodePath("../TileMap/SlidingDoor")
 
 [editable path="TileMap/SlidingDoor"]

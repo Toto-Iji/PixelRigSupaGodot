@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://bylm5ooavv1"]
+
+[ext_resource type="Script" uid="uid://by6ewl5yeeeuo" path="res://scripts/computer_npc.gd" id="1_lyfn0"]
+[ext_resource type="Texture2D" uid="uid://byx6yhfs8uvk2" path="res://assets/download-removebg-preview (1).png" id="2_uw5nw"]
+[ext_resource type="PackedScene" uid="uid://c8n6rp60wn0vv" path="res://scenes/dialogue_layer.tscn" id="3_lj3sr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_opiqg"]
+size = Vector2(36, 66)
+
+[node name="ComputerNPC" type="StaticBody2D"]
+script = ExtResource("1_lyfn0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0.999992, 7.62939e-06)
+scale = Vector2(0.442222, 0.442222)
+texture = ExtResource("2_uw5nw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, -1)
+shape = SubResource("RectangleShape2D_opiqg")
+
+[node name="DialogueLayer" parent="." instance=ExtResource("3_lj3sr")]
