@@ -1,9 +1,9 @@
 [gd_scene load_steps=27 format=3 uid="uid://b3d5v3f3xxmyr"]
 
 [ext_resource type="Script" uid="uid://dx372e0bo6qrg" path="res://scripts/game/world.gd" id="1_ry518"]
-[ext_resource type="Texture2D" uid="uid://b01lc2475vki5" path="res://assets/Solid_white.png" id="2_g3wwy"]
 [ext_resource type="PackedScene" uid="uid://by7yctgrl7bo1" path="res://scenes/game/player.tscn" id="3_ssxqg"]
 [ext_resource type="Script" uid="uid://bd156lcdidymc" path="res://scripts/game/quiz_ui.gd" id="4_8tx05"]
+[ext_resource type="Script" uid="uid://cuuil68kma8k4" path="res://scenes/game/minimap.gd" id="4_g3wwy"]
 [ext_resource type="PackedScene" uid="uid://hvvkl7lvsd4v" path="res://scenes/terminal.tscn" id="5_kkypk"]
 [ext_resource type="Script" uid="uid://cy1dhqly8k3hx" path="res://scripts/UIManager.gd" id="6_aa8ij"]
 [ext_resource type="Script" uid="uid://b0to2s73tb2r0" path="res://scripts/game/terminal_text.gd" id="7_xjrwe"]
@@ -19,9 +19,9 @@
 [ext_resource type="PackedScene" uid="uid://cw1d7jjf6gjfu" path="res://scenes/game/tutorial_popup.tscn" id="17_o7v5e"]
 [ext_resource type="PackedScene" uid="uid://icgnrds7ntj4" path="res://scenes/game/level_complete_popup.tscn" id="18_si4k2"]
 [ext_resource type="PackedScene" uid="uid://djitq0uk1qq1g" path="res://scenes/game/dialogue_system.tscn" id="19_gy7ni"]
-[ext_resource type="PackedScene" uid="uid://bs5lrdqqed1n0" path="res://scenes/game/level1.tscn" id="20_01lr2"]
 [ext_resource type="PackedScene" uid="uid://bt4xr2gfjh4oc" path="res://scenes/game/level_2.tscn" id="21_g0bee"]
 [ext_resource type="PackedScene" uid="uid://l73hgvkjc1y7" path="res://scenes/spike_ball.tscn" id="22_g3wwy"]
+[ext_resource type="Texture2D" uid="uid://cu28id2qdnyno" path="res://assets/bg.png" id="22_ssxqg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
 size = Vector2(1280, 20)
@@ -38,15 +38,36 @@ size = Vector2(20, 720)
 [node name="World" type="Node2D"]
 script = ExtResource("1_ry518")
 
-[node name="background" type="Sprite2D" parent="."]
-position = Vector2(640, 359.5)
-scale = Vector2(6.4, 3.595)
-texture = ExtResource("2_g3wwy")
-
 [node name="Player" parent="." groups=["player"] instance=ExtResource("3_ssxqg")]
 modulate = Color(0.822726, 0.792002, 0.699268, 1)
 z_index = 1
 position = Vector2(153, -109)
+
+[node name="minimapUI" type="CanvasLayer" parent="."]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="minimapUI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -512.0
+offset_right = -392.0
+offset_bottom = 120.0
+grow_horizontal = 0
+
+[node name="SubViewport" type="SubViewport" parent="minimapUI/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(120, 120)
+render_target_update_mode = 4
+script = ExtResource("4_g3wwy")
+
+[node name="Sprite2D" type="Sprite2D" parent="minimapUI/SubViewportContainer/SubViewport"]
+texture = ExtResource("22_ssxqg")
+
+[node name="Camera2D" type="Camera2D" parent="minimapUI/SubViewportContainer/SubViewport"]
+zoom = Vector2(0.1, 0.1)
+
+[node name="BG" type="Sprite2D" parent="."]
+texture = ExtResource("22_ssxqg")
 
 [node name="QuizUI" type="CanvasLayer" parent="."]
 script = ExtResource("4_8tx05")
@@ -244,9 +265,6 @@ position = Vector2(435, 774)
 
 [node name="DialogueSystem" parent="." instance=ExtResource("19_gy7ni")]
 
-[node name="DemoLevel2" parent="." instance=ExtResource("20_01lr2")]
-position = Vector2(338, 17)
-
 [node name="level2" parent="." instance=ExtResource("21_g0bee")]
 position = Vector2(2944, -408)
 
@@ -262,7 +280,9 @@ position = Vector2(4217, 908)
 [node name="SpikeBall4" parent="." instance=ExtResource("22_g3wwy")]
 position = Vector2(4524, 1068)
 
+[editable path="Player"]
 [editable path="Shooter1X"]
 [editable path="Shooter2X"]
 [editable path="Shooter1Y"]
 [editable path="level2"]
+[editable path="level2/TileMap/SlidingDoor"]

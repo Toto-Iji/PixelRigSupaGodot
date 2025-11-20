@@ -1,14 +1,15 @@
-# player.gd
 extends CharacterBody2D
 
 # --- Exported Properties ---
 @export var speed: float = 250.0
 @export var interact_distance: float = 50.0
 @export var attack_range: float = 400.0
-@export var fire_rate: float = 0.3  # 🆕 Time between shots (seconds)
+@export var fire_rate: float = 0.3
+@export var camera_focus_strength: float = 0.3  # 🆕 How much to offset camera (0.0-0.5)
 
 # --- Node References ---
 @onready var sprite: AnimatedSprite2D = $Sprite
+@onready var camera: Camera2D = $PlayerCamera  # 🆕 Add reference
 
 # --- Signals ---
 signal health_changed(new_health)
@@ -28,6 +29,10 @@ var last_direction := Vector2.DOWN
 var can_shoot: bool = true
 var shoot_cooldown_timer: Timer
 
+# 🆕 CAMERA FOCUS
+var current_target: Node2D = null
+var camera_original_offset: Vector2 = Vector2.ZERO
+
 # --- Constants ---
 const BULLET_SCENE = preload("res://scenes/game/bullet.tscn")
 
@@ -40,13 +45,26 @@ func _ready():
 	add_child(stun_timer)
 	stun_timer.timeout.connect(_on_stun_end)
 	
-	# 🆕 Initialize shoot cooldown timer
+	# Initialize shoot cooldown timer
 	shoot_cooldown_timer = Timer.new()
 	shoot_cooldown_timer.one_shot = true
 	add_child(shoot_cooldown_timer)
 	shoot_cooldown_timer.timeout.connect(_on_shoot_cooldown_end)
+	
+	# 🆕 Store camera's original offset
+	if camera:
+		camera_original_offset = camera.offset
 
 func _physics_process(delta):
+	# --- 🆕 Update Camera Focus (check for target first) ---
+	var detected_target = _get_nearest_hostile_in_range()
+	if detected_target:
+		current_target = detected_target  # Set target for camera
+	else:
+		current_target = null  # Clear target when no hostiles nearby
+	
+	_update_camera_focus(delta)
+	
 	# --- 1. Handle Knockback ---
 	if knockback_time > 0:
 		velocity = knockback_vector
@@ -62,12 +80,10 @@ func _physics_process(delta):
 		return
 	
 	# --- 3. Handle Attack Input ---
-	# 🆕 FIXED: Check both button press AND cooldown
-	if Input.is_action_pressed("Attack") and can_shoot:  # Changed to is_action_pressed
+	if Input.is_action_pressed("Attack") and can_shoot:
 		var target = _get_nearest_hostile_in_range()
 		if target:
 			_shoot(target)
-			# 🆕 Start cooldown
 			can_shoot = false
 			shoot_cooldown_timer.start(fire_rate)
 		else:
@@ -123,6 +139,21 @@ func _physics_process(delta):
 	if animation_to_play != "":
 		sprite.play(animation_to_play)
 
+# 🆕 Camera Focus System
+func _update_camera_focus(delta: float):
+	if not camera:
+		return
+	
+	var target_offset = Vector2.ZERO
+	
+	if current_target and is_instance_valid(current_target):
+		# Calculate midpoint between player and target (in local space)
+		var direction_to_target = current_target.global_position - global_position
+		target_offset = direction_to_target * camera_focus_strength
+	
+	# Smoothly interpolate camera offset
+	camera.offset = camera.offset.lerp(target_offset, delta * 5.0)
+
 # --- Health & Damage Functions ---
 
 func take_damage(amount: int) -> void:
@@ -142,6 +173,7 @@ func take_damage(amount: int) -> void:
 func die() -> void:
 	print("💀 Player is dead")
 	
+	current_target = null  # 🆕 Clear target
 	clear_knockback() 
 	velocity = Vector2.ZERO
 	set_physics_process(false)
@@ -167,7 +199,6 @@ func stun(duration: float) -> void:
 func _on_stun_end() -> void:
 	can_move = true
 
-# 🆕 Shoot cooldown handler
 func _on_shoot_cooldown_end() -> void:
 	can_shoot = true
 
@@ -184,7 +215,13 @@ func respawn_at(spawn_position: Vector2) -> void:
 	can_move = true
 	health = max_health
 	is_dead = false
-	can_shoot = true  # 🆕 Reset shooting ability
+	can_shoot = true
+	current_target = null  # 🆕 Clear target
+	
+	# 🆕 Reset camera
+	if camera:
+		camera.offset = camera_original_offset
+	
 	set_physics_process(true)
 	
 	global_position = spawn_position

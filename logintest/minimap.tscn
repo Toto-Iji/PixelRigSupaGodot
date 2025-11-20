@@ -1,0 +1,68 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmj2o157umepe"]
+
+[ext_resource type="Texture2D" uid="uid://cu28id2qdnyno" path="res://assets/bg.png" id="1_0pgu0"]
+[ext_resource type="Texture2D" uid="uid://cn56f2pnv286x" path="res://assets/red-removebg-preview.png" id="5_uhfg6"]
+
+[sub_resource type="GDScript" id="GDScript_cvo86"]
+script/source = "extends SubViewport
+
+@onready var minimap_camera = $Camera2D
+var target_player = null
+
+func _ready():
+	# 1. Get the current Scene Tree (like before)
+	var tree = get_tree()
+	var viewport_root = tree.root
+	target_player = viewport_root.find_child(\"Player\", true, false)
+	
+	if target_player:
+		print(\"Minimap successfully found the Player node by searching the Scene Tree root.\")
+	else:
+		print(\"CRITICAL ERROR: Player node not found. Check name and position in the World scene.\")
+	
+    # 💥 CRITICAL LINE: Make the SubViewport share the main scene's 2D world
+		world_2d = get_tree().root.get_world_2d()
+    
+		if target_player:
+				print(\"Minimap successfully found the Player node by searching the Scene Tree root.\")
+		else:
+			print(\"CRITICAL ERROR: Player node not found. Check name and position in the World scene.\")
+
+func _physics_process(_delta):
+	if target_player:
+		minimap_camera.position = target_player.position
+"
+
+[node name="minimap" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="BG" type="Sprite2D" parent="."]
+texture = ExtResource("1_0pgu0")
+
+[node name="minimap_ui" type="CanvasLayer" parent="."]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="minimap_ui"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_bottom = 120.0
+grow_horizontal = 0
+
+[node name="SubViewport" type="SubViewport" parent="minimap_ui/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(160, 160)
+render_target_update_mode = 4
+script = SubResource("GDScript_cvo86")
+
+[node name="Sprite2D" type="Sprite2D" parent="minimap_ui/SubViewportContainer/SubViewport"]
+texture = ExtResource("1_0pgu0")
+
+[node name="Camera2D" type="Camera2D" parent="minimap_ui/SubViewportContainer/SubViewport"]
+zoom = Vector2(0.3, 0.3)
+
+[node name="Sprite2D" type="Sprite2D" parent="minimap_ui/SubViewportContainer"]
+position = Vector2(80, 80)
+scale = Vector2(0.025, 0.025)
+texture = ExtResource("5_uhfg6")

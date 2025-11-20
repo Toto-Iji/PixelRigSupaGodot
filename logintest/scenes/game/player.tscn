@@ -228,5 +228,5 @@ scale = Vector2(3.5, 3.5)
 shape = SubResource("RectangleShape2D_onrkg")
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+zoom = Vector2(1.7, 1.7)
 position_smoothing_enabled = true
