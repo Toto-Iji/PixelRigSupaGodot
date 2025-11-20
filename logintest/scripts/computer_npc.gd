@@ -11,8 +11,10 @@ var story_lines: Array[String] = [
 	"Welcome back, Professor Ad— wait. You’re... not him. Interesting. You have his eyes, though. You must be his grandchild.",
 	"Professor Francis Adler. Founder of the Mind Sync System. It’s been twenty years since he last logged into this tester account.",
 	"He built all of this, you know — PixelRig, the entire learning framework, every module, every tool. Looks like you inherited his problem-solving skills.",
-	"If you found this device in a hidden room, then he wanted someone like you to discover it. The system you’ve synced with contains everything about computers — how they work, how to assemble them, how to truly understand them.",
-	"If you're ready... I can show you around."
+	"If you found this device in a hidden room, then he wanted someone like you to discover it.",
+	"The system you’ve synced with contains everything about computers—",
+	"how they work, how to assemble them, how to truly understand them.", 
+	"If you're ready...check out the TERMINAL"
 ]
 
 var unlocked_lines: Array[String] = [
