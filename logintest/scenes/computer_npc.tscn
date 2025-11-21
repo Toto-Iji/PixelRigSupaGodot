@@ -1,11 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://bylm5ooavv1"]
+[gd_scene load_steps=6 format=3 uid="uid://bylm5ooavv1"]
 
 [ext_resource type="Script" uid="uid://by6ewl5yeeeuo" path="res://scripts/computer_npc.gd" id="1_lyfn0"]
 [ext_resource type="Texture2D" uid="uid://byx6yhfs8uvk2" path="res://assets/download-removebg-preview (1).png" id="2_uw5nw"]
 [ext_resource type="PackedScene" uid="uid://c8n6rp60wn0vv" path="res://scenes/dialogue_layer.tscn" id="3_lj3sr"]
+[ext_resource type="Texture2D" uid="uid://bjbdcx5v4hj33" path="res://assets/controls.png" id="4_uw5nw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_opiqg"]
-size = Vector2(36, 66)
+size = Vector2(48, 42)
 
 [node name="ComputerNPC" type="StaticBody2D"]
 script = ExtResource("1_lyfn0")
@@ -20,3 +21,29 @@ position = Vector2(3, -1)
 shape = SubResource("RectangleShape2D_opiqg")
 
 [node name="DialogueLayer" parent="." instance=ExtResource("3_lj3sr")]
+
+[node name="ControlsLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="ControlsLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="ControlsImage" type="TextureRect" parent="ControlsLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.5
+offset_top = -160.5
+offset_right = 285.5
+offset_bottom = 160.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_uw5nw")
+expand_mode = 1

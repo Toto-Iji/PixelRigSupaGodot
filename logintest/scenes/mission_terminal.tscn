@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnlcjjmd5e8gm"]
+
+[ext_resource type="Script" uid="uid://cekdpan7c0h6w" path="res://mission_terminal.gd" id="1_yaycs"]
+[ext_resource type="Texture2D" uid="uid://syftps42htr4" path="res://assets/terminal.png" id="2_mlxxh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yaycs"]
+size = Vector2(36, 69)
+
+[node name="MissionTerminal" type="StaticBody2D"]
+script = ExtResource("1_yaycs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_mlxxh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1.5)
+shape = SubResource("RectangleShape2D_yaycs")
+
+[node name="TerminalUI" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="TerminalUI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -128.0
+offset_right = 64.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TerminalUI/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -226.0
+offset_top = -67.0
+offset_right = 139.0
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 32
+text = "This is the mission terminal. Your missions appear here."
+fit_content = true

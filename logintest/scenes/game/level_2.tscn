@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://bt4xr2gfjh4oc"]
+[gd_scene load_steps=29 format=3 uid="uid://bt4xr2gfjh4oc"]
 
 [ext_resource type="Script" path="res://scenes/game/level_2.gd" id="1_18c5o"]
 [ext_resource type="Texture2D" uid="uid://d3mgwuxbahedf" path="res://assets/micky-orchard-gm2.jpg" id="1_doay6"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://scenes/game/room_a.gd" id="11_rywa0"]
 [ext_resource type="Script" path="res://scenes/game/room_b.gd" id="11_wh2ag"]
 [ext_resource type="PackedScene" uid="uid://bylm5ooavv1" path="res://scenes/computer_npc.tscn" id="14_18c5o"]
+[ext_resource type="PackedScene" uid="uid://dnlcjjmd5e8gm" path="res://scenes/mission_terminal.tscn" id="15_ebldk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x1lkl"]
 texture = ExtResource("1_doay6")
@@ -4802,8 +4803,12 @@ offset_right = 1926.0
 offset_bottom = 576.0
 color = Color(0, 0, 0, 1)
 
-[node name="ComputerNPC" parent="." node_paths=PackedStringArray("linked_door") instance=ExtResource("14_18c5o")]
+[node name="ComputerNPC" parent="." node_paths=PackedStringArray("linked_terminal") instance=ExtResource("14_18c5o")]
 position = Vector2(609, 488)
+linked_terminal = NodePath("../MissionTerminal")
+
+[node name="MissionTerminal" parent="." node_paths=PackedStringArray("linked_door") instance=ExtResource("15_ebldk")]
+position = Vector2(0, 39)
 linked_door = NodePath("../TileMap/SlidingDoor")
 
 [editable path="TileMap/SlidingDoor"]

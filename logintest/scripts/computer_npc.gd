@@ -1,80 +1,90 @@
 extends StaticBody2D
 
 @onready var dialogue_ui = $DialogueLayer
+@onready var controls_layer = $ControlsLayer
 
-# 🔗 Drag your SlidingDoor node here in the Inspector
-@export var linked_door: Node2D 
+# 🔗 Drag the MISSION TERMINAL here (Not the door!)
+@export var linked_terminal: Node2D 
 
-# We DO NOT use @export for text to prevent Inspector bugs
 var story_lines: Array[String] = [
-	"You noticed a PC on top of the desk... powering on.",
-	"Welcome back, Professor Ad— wait. You’re... not him. Interesting. You have his eyes, though. You must be his grandchild.",
-	"Professor Francis Adler. Founder of the Mind Sync System. It’s been twenty years since he last logged into this tester account.",
-	"He built all of this, you know — PixelRig, the entire learning framework, every module, every tool. Looks like you inherited his problem-solving skills.",
-	"If you found this device in a hidden room, then he wanted someone like you to discover it.",
-	"The system you’ve synced with contains everything about computers—",
-	"how they work, how to assemble them, how to truly understand them.", 
-	"If you're ready...check out the TERMINAL"
+	"*You noticed a PC on top of the desk... powering on.*",
+	"Welcome back, Professor Ad— wait. You’re... not him.",
+	"If you found this device, then he wanted someone like you to discover it.",
+	"The system you’ve synced with contains everything about computers.", 
+	"If you're ready... check out the TERMINAL to receive your first mission."
 ]
 
-var unlocked_lines: Array[String] = [
-	"Access granted. You can now proceed to the next room."
+# Dialogue if you talk to NPC again
+var post_activation_lines: Array[String] = [
+	"The terminal is active. Access your mission objectives there."
 ]
 
-var has_unlocked_door: bool = false
+var is_terminal_active: bool = false
 var player_ref = null
+var is_showing_controls: bool = false
 
 func _ready():
 	if has_node("DialogueLayer"):
 		dialogue_ui.dialogue_finished.connect(_on_dialogue_finished)
 	
-	# Debug Check
-	if linked_door == null:
-		print("❌ CRITICAL ERROR: 'Linked Door' is empty! Click ComputerNPC in the scene and assign the Door node.")
-	else:
-		print("✅ NPC connected to door: ", linked_door.name)
+	if controls_layer:
+		controls_layer.visible = false
+
+	if linked_terminal == null:
+		print("⚠️ WARNING: NPC 'Linked Terminal' is empty in Inspector!")
 
 func interact():
+	if is_showing_controls: return
+
 	player_ref = get_tree().get_first_node_in_group("player")
-	if not player_ref:
-		player_ref = get_tree().get_first_node_in_group("Player")
+	if not player_ref: player_ref = get_tree().get_first_node_in_group("Player")
 	
 	if player_ref:
 		player_ref.can_move = false
 		player_ref.can_shoot = false
 		player_ref.velocity = Vector2.ZERO
 	
-	# Send the correct text
-	if has_unlocked_door:
-		print("sending unlocked lines: ", unlocked_lines.size())
-		dialogue_ui.start_dialogue(unlocked_lines)
+	# Choose dialogue based on progress
+	if is_terminal_active:
+		dialogue_ui.start_dialogue(post_activation_lines)
 	else:
-		print("sending story lines: ", story_lines.size())
 		dialogue_ui.start_dialogue(story_lines)
 
 func _on_dialogue_finished():
+	if not is_terminal_active:
+		# First time: Show controls image
+		_show_controls_popup()
+	else:
+		# Just unfreeze
+		_unfreeze_player()
+
+func _show_controls_popup():
+	is_showing_controls = true
+	if controls_layer:
+		controls_layer.visible = true
+
+func _close_controls_popup():
+	is_showing_controls = false
+	if controls_layer:
+		controls_layer.visible = false
+	
+	# ACTIVATE TERMINAL
+	if not is_terminal_active:
+		is_terminal_active = true
+		if linked_terminal and linked_terminal.has_method("activate_terminal"):
+			linked_terminal.activate_terminal()
+		else:
+			print("❌ Error: Linked Terminal is missing or script is wrong.")
+	
+	_unfreeze_player()
+
+func _unfreeze_player():
 	if player_ref:
 		player_ref.can_move = true
 		player_ref.can_shoot = true
-	
-	if not has_unlocked_door:
-		has_unlocked_door = true
-		print("🔓 Attempting to unlock door...")
-		
-		if linked_door:
-			if linked_door.has_method("unlock_door"):
-				linked_door.unlock_door()
-				# Force an update in case player is standing in it
-				_update_door_state()
-			else:
-				print("❌ ERROR: The linked node exists but does not have 'unlock_door()'. Check sliding_door.gd script.")
-		else:
-			print("❌ ERROR: Cannot unlock. 'Linked Door' is NULL.")
 
-# Helper to handle if player is already standing at the door
-func _update_door_state():
-	if linked_door.has_method("_on_area_body_entered") and player_ref:
-		# We simulate the player entering the door area again to trigger the open
-		var door_area = linked_door.get_node_or_null("Area2D")
-		if door_area and door_area.overlaps_body(player_ref):
-			linked_door._open_door()
+func _input(event):
+	if is_showing_controls:
+		if event.is_action_pressed("Interact") or event.is_action_pressed("ui_accept"):
+			get_viewport().set_input_as_handled()
+			_close_controls_popup()
